@@ -1,0 +1,174 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  firstName    String
+  lastName     String
+  email        String    @unique
+  passwordHash String
+  dateCreated  DateTime  @default(now())
+
+  companies            Company[]
+  applications         Application[]
+  resumes              Resume[]
+  coverLetters         CoverLetter[]
+  comments             Comment[]
+}
+
+model Company {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  companyName    String
+  companyLogoUrl String?
+  website        String?
+  description    String?
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applications Application[]
+}
+
+model ApplicationStatus {
+  id         Int    @id @default(autoincrement())
+  statusName String @unique
+
+  applications       Application[]
+  applicationUpdates ApplicationUpdate[]
+}
+
+model WorkType {
+  id           Int    @id @default(autoincrement())
+  workTypeName String @unique
+
+  applications Application[]
+}
+
+model State {
+  id        Int    @id @default(autoincrement())
+  stateName String @unique
+  stateCode String @unique
+
+  cities City[]
+}
+
+model City {
+  id       Int    @id @default(autoincrement())
+  stateId  Int
+  cityName String
+
+  state        State         @relation(fields: [stateId], references: [id])
+  applications Application[]
+}
+
+model Application {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  companyId       Int
+  currentStatusId Int
+  workTypeId      Int?
+  cityId          Int?
+  title           String
+  appUrl          String?
+  description     String?
+  salaryMin       Int?
+  salaryMax       Int?
+  source          String?
+  isArchived      Boolean  @default(false)
+  dateCreated     DateTime @default(now())
+
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company       Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  currentStatus ApplicationStatus @relation(fields: [currentStatusId], references: [id])
+  workType      WorkType?         @relation(fields: [workTypeId], references: [id])
+  city          City?             @relation(fields: [cityId], references: [id])
+
+  updates      ApplicationUpdate[]
+  resumes      ApplicationResume[]
+  coverLetters ApplicationCoverLetter[]
+  comments     Comment[]
+}
+
+model ApplicationUpdate {
+  id            Int      @id @default(autoincrement())
+  applicationId Int
+  statusId      Int
+  description   String?
+  dateUpdated   DateTime @default(now())
+
+  application Application       @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  status      ApplicationStatus @relation(fields: [statusId], references: [id])
+}
+
+model Resume {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  title       String
+  fileUrl     String?
+  fileName    String?
+  dateCreated DateTime @default(now())
+
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applications ApplicationResume[]
+  comments     Comment[]
+}
+
+model CoverLetter {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  title       String
+  content     String?
+  fileUrl     String?
+  fileName    String?
+  dateCreated DateTime @default(now())
+
+  user         User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applications ApplicationCoverLetter[]
+  comments     Comment[]
+}
+
+model ApplicationResume {
+  id            Int      @id @default(autoincrement())
+  applicationId Int
+  resumeId      Int
+  dateAttached  DateTime @default(now())
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  resume      Resume      @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+}
+
+model ApplicationCoverLetter {
+  id            Int      @id @default(autoincrement())
+  applicationId Int
+  coverLetterId Int
+  dateAttached  DateTime @default(now())
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  coverLetter CoverLetter @relation(fields: [coverLetterId], references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  applicationId Int?
+  resumeId      Int?
+  coverLetterId Int?
+  body          String
+  dateCreated   DateTime @default(now())
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  application Application? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  resume      Resume?      @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  coverLetter CoverLetter? @relation(fields: [coverLetterId], references: [id], onDelete: Cascade)
+}
