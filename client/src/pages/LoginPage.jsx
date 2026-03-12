@@ -23,7 +23,7 @@ export default function LoginPage() {
         try {
             const response = await authApi.login({ email, password });
             login(response.data.token);
-            navigate('/');
+            navigate('/dashboard');
         } catch (err) {
             setError(err.response?.data?.error || 'Something went wrong');
         } finally {
@@ -95,7 +95,7 @@ export default function LoginPage() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                placeholder="you@example.com"
+                                placeholder="you@offerfetch.co"
                                 className="w-full px-4 py-3 bg-white border border-[#E5E5E5] rounded-lg text-sm text-[#1A1A1A] placeholder-[#BDBDBD] focus:outline-none focus:border-[#1A1A1A] transition-colors"
                             />
                         </div>

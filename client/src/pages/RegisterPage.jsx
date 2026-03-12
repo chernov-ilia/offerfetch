@@ -26,7 +26,7 @@ export default function RegisterPage() {
             await authApi.register({ firstName, lastName, email, password });
             const response = await authApi.login({ email, password });
             login(response.data.token);
-            navigate('/');
+            navigate('/dashboard');
         } catch (err) {
             setError(err.response?.data?.error || 'Something went wrong');
         } finally {
