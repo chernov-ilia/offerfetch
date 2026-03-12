@@ -22,6 +22,8 @@ const authRoutes = require('./auth/auth.routes');
 app.use('/api/auth', authRoutes);
 const applicationsRoutes = require('./applications/applications.routes');
 app.use('/api/applications', applicationsRoutes);
+const companiesRoutes = require('./companies/companies.routes');
+app.use('/api/companies', companiesRoutes);
 
 module.exports = app;
 
