@@ -12,9 +12,13 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-// Health check (to be removed)
+// Health check
 app.get('/health', (req, res) => {
     res.json({ status: 'ok' });
 });
+
+// Routes
+const authRoutes = require('./auth/auth.routes');
+app.use('/api/auth', authRoutes);
 
 module.exports = app;
