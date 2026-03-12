@@ -7,6 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import { getApplications } from '../api/applications';
 import usePageTitle from '../hooks/usePageTitle';
 import PageTransition from '../components/PageTransition';
+import NewApplicationModal from '../components/NewApplicationModal';
 
 const STATUS_COLORS = {
     'Wishlist':     { bg: '#F5F5F5', text: '#888' },
@@ -22,6 +23,7 @@ export default function DashboardPage() {
     usePageTitle('Dashboard');
     const { logout } = useAuth();
     const [search, setSearch] = useState('');
+    const [showModal, setShowModal] = useState(false);
 
     const { data: applications = [], isLoading } = useQuery({
         queryKey: ['applications'],
@@ -74,20 +76,24 @@ export default function DashboardPage() {
                                 Dashboard
                             </h1>
                         </div>
-                        <button style={{
-                            fontFamily: "'Unbounded', sans-serif",
-                            fontSize: 12, fontWeight: 500,
-                            background: '#1A1A1A', color: '#F7F5F2',
-                            border: 'none', borderRadius: 8,
-                            padding: '14px 24px', cursor: 'pointer',
-                            letterSpacing: '0.02em',
-                            transition: 'background 0.2s',
-                        }}
-                                onMouseEnter={e => e.target.style.background = '#333'}
-                                onMouseLeave={e => e.target.style.background = '#1A1A1A'}
+                        <button
+                            onClick={() => setShowModal(true)}
+                            style={{
+                                fontFamily: "'Unbounded', sans-serif",
+                                fontSize: 12, fontWeight: 500,
+                                background: '#1A1A1A', color: '#F7F5F2',
+                                border: 'none', borderRadius: 8,
+                                padding: '14px 24px', cursor: 'pointer',
+                                letterSpacing: '0.02em',
+                                transition: 'background 0.2s',
+                            }}
+                            onMouseEnter={e => e.target.style.background = '#333'}
+                            onMouseLeave={e => e.target.style.background = '#1A1A1A'}
                         >
                             + New application
                         </button>
+
+
                     </div>
 
                     {/* STATS */}
@@ -196,6 +202,7 @@ export default function DashboardPage() {
                         </div>
                     )}
                 </div>
+                {showModal && <NewApplicationModal onClose={() => setShowModal(false)} />}
             </div>
         </PageTransition>
     );
