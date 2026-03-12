@@ -22,3 +22,4 @@ const authRoutes = require('./auth/auth.routes');
 app.use('/api/auth', authRoutes);
 
 module.exports = app;
+
