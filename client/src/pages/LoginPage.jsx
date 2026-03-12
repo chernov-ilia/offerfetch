@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import * as authApi from '../api/auth';
+import usePageTitle from "../hooks/usePageTitle.js";
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -29,6 +30,8 @@ export default function LoginPage() {
             setLoading(false);
         }
     };
+
+    usePageTitle("Sign In");
 
     return (
         <div className="min-h-screen bg-[#F7F5F2] flex">

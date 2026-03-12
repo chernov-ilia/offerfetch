@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import * as authApi from '../api/auth';
+import usePageTitle from "../hooks/usePageTitle.js";
 
 export default function RegisterPage() {
     const [firstName, setFirstName] = useState('');
@@ -32,6 +33,8 @@ export default function RegisterPage() {
             setLoading(false);
         }
     };
+
+    usePageTitle("Account registration");
 
     return (
         <div className="min-h-screen bg-[#F7F5F2] flex">
