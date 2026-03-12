@@ -24,6 +24,8 @@ const applicationsRoutes = require('./applications/applications.routes');
 app.use('/api/applications', applicationsRoutes);
 const companiesRoutes = require('./companies/companies.routes');
 app.use('/api/companies', companiesRoutes);
+const commentsRoutes = require('./comments/comments.routes');
+app.use('/api/applications/:applicationId/comments', commentsRoutes);
 
 module.exports = app;
 

@@ -7,7 +7,9 @@ import { useAuth } from '../context/AuthContext';
 import { getApplications } from '../api/applications';
 import usePageTitle from '../hooks/usePageTitle';
 import PageTransition from '../components/PageTransition';
+import { useNavigate } from 'react-router-dom';
 import NewApplicationModal from '../components/NewApplicationModal';
+
 
 const STATUS_COLORS = {
     'Wishlist':     { bg: '#F5F5F5', text: '#888' },
@@ -24,6 +26,7 @@ export default function DashboardPage() {
     const { logout } = useAuth();
     const [search, setSearch] = useState('');
     const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
 
     const { data: applications = [], isLoading } = useQuery({
         queryKey: ['applications'],
@@ -165,6 +168,7 @@ export default function DashboardPage() {
                                 return (
                                     <div
                                         key={app.id}
+                                        onClick={() => navigate(`/applications/${app.id}`)}
                                         style={{
                                             display: 'grid', gridTemplateColumns: '2fr 1.5fr 1fr 1fr 1fr',
                                             padding: '18px 24px',
@@ -174,6 +178,7 @@ export default function DashboardPage() {
                                         }}
                                         onMouseEnter={e => e.currentTarget.style.background = '#FAFAFA'}
                                         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+
                                     >
                     <span style={{ fontFamily: "'Unbounded', sans-serif", fontSize: 13, fontWeight: 500, color: '#1A1A1A', letterSpacing: '-0.01em' }}>
                       {app.title}
