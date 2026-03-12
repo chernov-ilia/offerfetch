@@ -20,6 +20,8 @@ app.get('/health', (req, res) => {
 // Routes
 const authRoutes = require('./auth/auth.routes');
 app.use('/api/auth', authRoutes);
+const applicationsRoutes = require('./applications/applications.routes');
+app.use('/api/applications', applicationsRoutes);
 
 module.exports = app;
 
