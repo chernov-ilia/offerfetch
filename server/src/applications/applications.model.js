@@ -46,13 +46,39 @@ const getById = async (id, userId) => {
 };
 
 const create = async (data) => {
-    return prisma.application.create({ data });
+    return prisma.$transaction(async (tx) => {
+        const application = await tx.application.create({ data });
+
+        await tx.applicationUpdate.create({
+            data: {
+                applicationId: application.id,
+                statusId: application.currentStatusId,
+                description: 'Application created'
+            }
+        });
+
+        return application;
+    });
 };
 
 const update = async (id, userId, data) => {
-    return prisma.application.updateMany({
-        where: { id, userId },
-        data
+    return prisma.$transaction(async (tx) => {
+        const application = await tx.application.updateMany({
+            where: { id, userId },
+            data
+        });
+
+        if (data.currentStatusId) {
+            await tx.applicationUpdate.create({
+                data: {
+                    applicationId: id,
+                    statusId: data.currentStatusId,
+                    description: data.statusDescription || null
+                }
+            });
+        }
+
+        return application;
     });
 };
 
