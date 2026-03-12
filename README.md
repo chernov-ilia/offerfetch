@@ -1,6 +1,6 @@
-# OfferFetch - your personal job application tracker
+# OFferFetch
 
-**OfferFetch** is a personal job application tracker built to bring some order to the chaos of a job search. Instead of juggling spreadsheets or losing track of where you applied and what you sent, OfferFetch gives you one place to manage it all — applications, companies, resumes, cover letters, and a running log of every update along the way.
+**OFferFetch** is a personal job application tracker built to bring some order to the chaos of a job search. Instead of juggling spreadsheets or losing track of where you applied and what you sent, OFferFetch gives you one place to manage it all — applications, companies, resumes, cover letters, and a running log of every update along the way.
 
 Built with Node.js, Express, and React, backed by PostgreSQL. Containerized with Docker for local development.
 
