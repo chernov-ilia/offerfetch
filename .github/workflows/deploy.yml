@@ -15,6 +15,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: VITE_TURNSTILE_SITE_KEY
           script: |
             cd /var/www/offerfetch
             git pull origin main
@@ -24,5 +25,7 @@ jobs:
             pm2 restart offerfetch-api
             cd ../client
             npm install
-            npm run build
+            VITE_TURNSTILE_SITE_KEY=$VITE_TURNSTILE_SITE_KEY npm run build
             echo "Deploy completed!"
+        env:
+          VITE_TURNSTILE_SITE_KEY: ${{ secrets.VITE_TURNSTILE_SITE_KEY }}
