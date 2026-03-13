@@ -10,3 +10,7 @@
 h1, h2, h3, .brand {
     font-family: 'Unbounded', sans-serif;
 }
+
+#nav {
+    top: 40px;
+}

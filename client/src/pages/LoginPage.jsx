@@ -5,23 +5,29 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import * as authApi from '../api/auth';
 import usePageTitle from "../hooks/usePageTitle.js";
+import { Turnstile } from '@marsidev/react-turnstile';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [turnstileToken, setTurnstileToken] = useState(null);
 
     const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!turnstileToken) {
+            setError('Please complete the security check');
+            return;
+        }
         setLoading(true);
         setError(null);
 
         try {
-            const response = await authApi.login({ email, password });
+            const response = await authApi.login({ email, password, turnstileToken });
             login(response.data.token);
             navigate('/dashboard');
         } catch (err) {
@@ -38,9 +44,9 @@ export default function LoginPage() {
             {/* Left panel */}
             <div className="hidden lg:flex w-1/2 bg-[#1A1A1A] flex-col justify-between p-16">
                 <div>
-          <span className="brand text-white text-lg font-semibold tracking-tight">
-            OfferFetch
-          </span>
+                    <span className="brand text-white text-lg font-semibold tracking-tight">
+                        <a href="/" className="nav-logo brand">OfferFetch</a>
+                    </span>
                 </div>
                 <div>
                     <p className="text-[#666] text-sm uppercase tracking-widest mb-4 font-medium">
@@ -67,7 +73,6 @@ export default function LoginPage() {
             {/* Right panel */}
             <div className="flex-1 flex items-center justify-center p-8">
                 <div className="w-full max-w-sm">
-
                     <div className="lg:hidden mb-10">
                         <span className="brand text-[#1A1A1A] text-lg font-semibold">OfferFetch</span>
                     </div>
@@ -95,7 +100,7 @@ export default function LoginPage() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                placeholder="you@offerfetch.co"
+                                placeholder="you@example.com"
                                 className="w-full px-4 py-3 bg-white border border-[#E5E5E5] rounded-lg text-sm text-[#1A1A1A] placeholder-[#BDBDBD] focus:outline-none focus:border-[#1A1A1A] transition-colors"
                             />
                         </div>
@@ -114,9 +119,17 @@ export default function LoginPage() {
                             />
                         </div>
 
+                        <Turnstile
+                            siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                            onSuccess={(token) => setTurnstileToken(token)}
+                            onError={() => setError('Security check failed, please try again')}
+                            onExpire={() => setTurnstileToken(null)}
+                            options={{ theme: 'light' }}
+                        />
+
                         <button
                             type="submit"
-                            disabled={loading}
+                            disabled={loading || !turnstileToken}
                             className="w-full py-3 bg-[#1A1A1A] text-white text-sm font-medium rounded-lg hover:bg-[#333] transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                         >
                             {loading ? 'Signing in...' : 'Sign in'}

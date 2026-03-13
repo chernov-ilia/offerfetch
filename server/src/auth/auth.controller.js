@@ -5,9 +5,27 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const prisma = require('../config/db');
 
+const verifyTurnstile = async (token) => {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            secret: process.env.TURNSTILE_SECRET_KEY,
+            response: token
+        })
+    });
+    const data = await response.json();
+    return data.success;
+};
+
 const register = async (req, res) => {
     try {
-        const { firstName, lastName, email, password } = req.body;
+        const { firstName, lastName, email, password, turnstileToken } = req.body;
+
+        const isHuman = await verifyTurnstile(turnstileToken);
+        if (!isHuman) {
+            return res.status(400).json({ error: 'Security check failed' });
+        }
 
         const existingUser = await prisma.user.findUnique({ where: { email } });
         if (existingUser) {
@@ -31,7 +49,12 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, turnstileToken } = req.body;
+
+        const isHuman = await verifyTurnstile(turnstileToken);
+        if (!isHuman) {
+            return res.status(400).json({ error: 'Security check failed' });
+        }
 
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user) {

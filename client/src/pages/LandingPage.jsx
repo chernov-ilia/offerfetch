@@ -447,8 +447,7 @@ export default function LandingPage() {
         }
       `}</style>
 
-            <div className="landing">
-                {/* NAV */}
+
                 <nav id="nav">
                     <a href="/" className="nav-logo brand">OfferFetch</a>
                     <ul className="nav-links">
@@ -458,6 +457,8 @@ export default function LandingPage() {
                         <li><Link to="/register" className="nav-cta">Get started</Link></li>
                     </ul>
                 </nav>
+
+
 
                 {/* HERO */}
                 <section className="hero">
@@ -479,6 +480,22 @@ export default function LandingPage() {
                         </a>
                     </div>
                 </section>
+
+                <div className="landing">
+                    {/* NAV */}
+                    {/* BETA BANNER */}
+                    <div style={{
+                        width: '100%',
+                        background: '#ef4444',
+                        color: '#fff',
+                        textAlign: 'center',
+                        fontSize: '13px',
+                        fontWeight: '500',
+                        padding: '10px 24px',
+                        letterSpacing: '0.01em'
+                    }}>
+                        ⚠️ OfferFetch is currently in experimental mode — data integrity is not guaranteed.
+                    </div>
 
                 <div className="divider" />
 
