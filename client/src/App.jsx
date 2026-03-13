@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ApplicationPage from './pages/ApplicationPage';
+import NotFoundPage from './pages/NotFoundPage'
 
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ function AnimatedRoutes() {
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
                 <Route path="/applications/:id" element={<PrivateRoute><ApplicationPage /></PrivateRoute>} />
+                <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </AnimatePresence>
     );
