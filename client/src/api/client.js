@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const client = axios.create({
-    baseURL: 'https://api.offerfetch.cc',
+    baseURL: 'https://api.offerfetch.cc/api/',
 });
 
 client.interceptors.request.use((config) => {
